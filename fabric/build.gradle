@@ -1,7 +1,7 @@
 import net.fabricmc.loom.task.RemapJarTask
 
 plugins {
-    id 'fabric-loom' version '1.6-SNAPSHOT'
+    id 'fabric-loom' version '1.11-SNAPSHOT'
     id 'com.github.johnrengelman.shadow' version '8.1.1'
 }
 
@@ -49,9 +49,10 @@ dependencies {
     }
     modImplementation "net.fabricmc:fabric-loader:${rootProject.loader_version}"
     modImplementation "net.fabricmc.fabric-api:fabric-api:${rootProject.fabric_version}"
-    modImplementation('com.epherical.epherolib:EpheroLib-fabric:1.2.0-1.20.6')
-    modCompileOnly "vazkii.patchouli:Patchouli:1.20.1-84-FABRIC-SNAPSHOT"
-
+    modImplementation files("../jars/EpheroLib-FABRIC-1.2.0-1.20.6.jar")
+    modCompileOnly "vazkii.patchouli:Patchouli:1.20.1-84-FABRIC-SNAPSHOT",{
+        exclude(group: "net.fabricmc.fabric-api")
+    }
     modCompileOnly "com.terraformersmc:modmenu:${rootProject.modmenu_version}",{
         exclude(group: "net.fabricmc.fabric-api")
     }
