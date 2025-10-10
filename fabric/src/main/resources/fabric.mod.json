@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "id": "croptopia",
+  "id": "croptopia-fabric",
   "version": "${mod_version}",
-  "name": "Croptopia",
+  "name": "Croptopia-Fabric",
   "description": "Adds crops to the game",
   "authors": [
     "Thonk",
@@ -15,12 +15,13 @@
     "didelphimorph",
     "DefektIV (translation)",
     "devpelux (translation)",
-    "Ayutac"
+    "Ayutac",
+    "pcal43"
   ],
   "contact": {
-    "sources": "https://github.com/ExcessiveAmountsOfZombies/Croptopia",
-    "issues": "https://github.com/ExcessiveAmountsOfZombies/Croptopia/issues",
-    "homepage": "https://www.curseforge.com/minecraft/mc-mods/croptopia-fabric"
+    "sources": "https://github.com/pcal43/croptopia-fabric",
+    "issues": "https://github.com/pcal43/croptopia-fabric/issues",
+    "homepage": "https://github.com/pcal43/croptopia-fabric"
   },
   "license": "MIT",
   "icon": "assets/croptopia/croptopia.png",
@@ -47,10 +48,13 @@
     "fabricloader": ">=0.14.12",
     "fabric-api": ">=0.55.1",
     "fabric-biome-api-v1": ">=3.0.0",
-    "minecraft": ">=1.19.4"
+    "minecraft": ">=1.21.1"
   },
   "suggests": {
     "patchouli": "*",
     "dehydration": ">=1.0.10"
+  },
+  "conflicts": {
+    "croptopia": "*"
   }
 }
