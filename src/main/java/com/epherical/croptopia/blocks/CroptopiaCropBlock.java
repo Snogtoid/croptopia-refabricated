@@ -1,26 +1,17 @@
 package com.epherical.croptopia.blocks;
 
-import com.epherical.croptopia.CroptopiaMod;
 import com.epherical.croptopia.items.SeedItem;
+
 import net.minecraft.core.BlockPos;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.stats.Stats;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.ItemLike;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.CropBlock;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.chunk.status.ChunkStatus;
-import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
@@ -41,13 +32,13 @@ public class CroptopiaCropBlock extends CropBlock {
         super(settings);
     }
 
+    public void setSeed(SeedItem seed) {
+        this.seed = seed;
+    }
+
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
         return AGE_TO_SHAPE[state.getValue(this.getAgeProperty())];
-    }
-
-    public void setSeed(SeedItem seed) {
-        this.seed = seed;
     }
 
     @Override // JANK
@@ -64,41 +55,8 @@ public class CroptopiaCropBlock extends CropBlock {
         return false;
     }
 
-    protected boolean mayPlaceOn(BlockState floor, BlockGetter world, BlockPos pos) {
-        return super.mayPlaceOn(floor, world, pos) || floor.is(BlockTags.DIRT) || floor.is(BlockTags.SAND);
-    }
-
-
-    @Override
-    protected InteractionResult useWithoutItem(BlockState state, Level world, BlockPos pos, Player player, BlockHitResult hit) {
-        if (CroptopiaMod.getInstance().platform().skipHarvest()) {
-            return super.useWithoutItem(state, world, pos, player, hit);
-        }
-        if (getAge(state) == getMaxAge()) {
-            if (player instanceof ServerPlayer) {
-                CroptopiaMod.getInstance().platform().afterBlockBroken(world, player, pos, state, null);
-            }
-            player.awardStat(Stats.BLOCK_MINED.get(this));
-            player.causeFoodExhaustion(0.005f);
-            world.setBlock(pos, this.getStateForAge(0), 2);
-            dropResources(state, world, pos);
-            return InteractionResult.SUCCESS;
-        }
-        return InteractionResult.PASS;
-    }
-
-    @Override
-    public void fallOn(Level world, BlockState state, BlockPos pos, Entity entity, float fallDistance) {
-        super.fallOn(world, state, pos, entity, fallDistance);
-    }
-
     @Override
     protected ItemLike getBaseSeedId() {
         return seed != null ? seed : Items.AIR;
-    }
-
-    @Override
-    public IntegerProperty getAgeProperty() {
-        return super.getAgeProperty();
     }
 }
