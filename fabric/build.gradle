@@ -34,8 +34,8 @@ sourceSets {
         }
         resources {
             srcDirs += [
-                    "src/main/generated",
-                    rootProject.sourceSets.main.resources
+                    rootProject.sourceSets.main.resources,
+                    "src/generated/resources"
             ]
         }
     }
@@ -43,16 +43,15 @@ sourceSets {
 
 dependencies {
     minecraft "com.mojang:minecraft:${rootProject.mc_ver}"
-    mappings loom.layered() {
-        officialMojangMappings()
-        parchment("org.parchmentmc.data:parchment-1.20.1:2023.07.09")
-    }
+    mappings loom.officialMojangMappings()
     modImplementation "net.fabricmc:fabric-loader:${rootProject.loader_version}"
     modImplementation "net.fabricmc.fabric-api:fabric-api:${rootProject.fabric_version}"
-    modImplementation files("../jars/EpheroLib-FABRIC-1.2.0-1.20.6.jar")
-    modCompileOnly "vazkii.patchouli:Patchouli:1.20.1-84-FABRIC-SNAPSHOT",{
+    //modImplementation('com.epherical.epherolib:EpheroLib-fabric:1.2.0-1.20.6')
+    modImplementation files("../jars/EpheroLib-FABRIC-1.2.0-1.21.5.jar")
+    modCompileOnly "vazkii.patchouli:Patchouli:1.21-88-FABRIC",{
         exclude(group: "net.fabricmc.fabric-api")
     }
+
     modCompileOnly "com.terraformersmc:modmenu:${rootProject.modmenu_version}",{
         exclude(group: "net.fabricmc.fabric-api")
     }
@@ -79,28 +78,48 @@ loom {
         }
 
         datagen {
-            server()
+            inherit client
             name "Data Generation"
             vmArg "-Dfabric-api.datagen"
-            vmArg "-Dfabric-api.datagen.output-dir=${getRootProject().file("src/main/generated")}"
+            vmArg "-Dfabric-api.datagen.output-dir=${getProject().file("build/datagen/output")}"
             runDir "build/datagen"
             ideConfigGenerated = true
         }
+        
     }
 }
 
+// Preserve the output of data generation in the source tree so we can more easily detect problems
+// We could also generate directly into src/generated, but that tends to cause issues with the .cache directory;
+// generating into build just seems cleaner.
+task copyDatagenOutput(type: Copy) {
+    doFirst {
+        delete "src/generated/resources"
+    }
+    from "build/datagen/output"
+    into "src/generated/resources"
+    exclude ".cache/**"
+    
+}
+runDatagen.finalizedBy copyDatagenOutput
+
+
+// copy the generated resources from our source tree into the build
 processResources {
     duplicatesStrategy = DuplicatesStrategy.INCLUDE
 
     from(sourceSets.main.resources.srcDirs) {
         include "fabric.mod.json"
-        expand "mod_version": rootProject.version
+        // This little horror allows us to have our published modid be 'croptopia-fabric' while still using datagen to 
+        // generate resources in the 'croptopia' namespace.  Fabric really doesn't want us to do that, which I guess
+        // is sort of understandable, but in our case, given the temporary nature of this codebase, it seems like
+        // a reasonable thing to want to do.  This is a little fragile, and it only works because we do runData as a
+        // development operation, not as part of the release build.
+        def isDatagenBuild = gradle.startParameter.taskNames.contains(":fabric:runData") || gradle.startParameter.taskNames.contains("runData")
+        def modId = isDatagenBuild ? "croptopia" : "croptopia-fabric"
+        expand "mod_version": rootProject.version, "mod_id": modId
+        duplicatesStrategy = DuplicatesStrategy.INCLUDE
     }
-
-    //from(sourceSets.main.resources.srcDirs) {
-    //    include('**/data/croptopia/recipes/**')
-    //    expand "dependent": "c"
-    //}
 
     from(sourceSets.main.resources.srcDirs) {
         include('**/data/**')
@@ -109,7 +128,9 @@ processResources {
         duplicatesStrategy = DuplicatesStrategy.INCLUDE
     }
 }
-tasks.processResources.dependsOn(rootProject.tasks.processResources)
+
+
+tasks.processResources.dependsOn(rootProject.tasks.processResources) // REVIEW 1.21.6 is this necessary?
 
 tasks.withType(JavaCompile) {
     options.encoding = "UTF-8"
