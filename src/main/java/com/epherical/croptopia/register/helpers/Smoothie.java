@@ -5,19 +5,16 @@ import com.epherical.croptopia.items.Drink;
 import com.epherical.croptopia.register.Content;
 import com.epherical.croptopia.util.ItemConvertibleWithPlural;
 import com.epherical.croptopia.util.RegisterFunction;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ItemLike;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import static com.epherical.croptopia.CroptopiaMod.createGroup;
-import static com.epherical.croptopia.util.FoodConstructor.*;
+import static com.epherical.croptopia.util.FoodConstructor.JUICE_5;
+import static com.epherical.croptopia.util.FoodConstructor.createBuilder;
 
 public class Smoothie implements ItemLike {
     private static final List<Smoothie> INSTANCES = new ArrayList<>();

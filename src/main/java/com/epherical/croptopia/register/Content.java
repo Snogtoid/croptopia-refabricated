@@ -48,8 +48,31 @@ import java.util.stream.Stream;
 
 import static com.epherical.croptopia.CroptopiaMod.createGroup;
 import static com.epherical.croptopia.CroptopiaMod.createIdentifier;
-import static com.epherical.croptopia.common.ItemNamesV2.*;
-import static com.epherical.croptopia.util.FoodConstructor.*;
+import static com.epherical.croptopia.util.FoodConstructor.FURNACE_3;
+import static com.epherical.croptopia.util.FoodConstructor.FURNACE_4;
+import static com.epherical.croptopia.util.FoodConstructor.FURNACE_5;
+import static com.epherical.croptopia.util.FoodConstructor.FURNACE_7;
+import static com.epherical.croptopia.util.FoodConstructor.RAW_CROP_1;
+import static com.epherical.croptopia.util.FoodConstructor.RAW_CROP_2;
+import static com.epherical.croptopia.util.FoodConstructor.RAW_MEAT_1;
+import static com.epherical.croptopia.util.FoodConstructor.REG_1;
+import static com.epherical.croptopia.util.FoodConstructor.REG_10;
+import static com.epherical.croptopia.util.FoodConstructor.REG_11;
+import static com.epherical.croptopia.util.FoodConstructor.REG_12;
+import static com.epherical.croptopia.util.FoodConstructor.REG_13;
+import static com.epherical.croptopia.util.FoodConstructor.REG_14;
+import static com.epherical.croptopia.util.FoodConstructor.REG_15;
+import static com.epherical.croptopia.util.FoodConstructor.REG_16;
+import static com.epherical.croptopia.util.FoodConstructor.REG_18;
+import static com.epherical.croptopia.util.FoodConstructor.REG_2;
+import static com.epherical.croptopia.util.FoodConstructor.REG_20;
+import static com.epherical.croptopia.util.FoodConstructor.REG_3;
+import static com.epherical.croptopia.util.FoodConstructor.REG_4;
+import static com.epherical.croptopia.util.FoodConstructor.REG_5;
+import static com.epherical.croptopia.util.FoodConstructor.REG_6;
+import static com.epherical.croptopia.util.FoodConstructor.REG_7;
+import static com.epherical.croptopia.util.FoodConstructor.REG_8;
+import static com.epherical.croptopia.util.FoodConstructor.REG_9;
 
 public class Content {
 

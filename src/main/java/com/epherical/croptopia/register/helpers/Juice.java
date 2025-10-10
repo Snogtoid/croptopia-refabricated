@@ -13,7 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.epherical.croptopia.CroptopiaMod.createGroup;
-import static com.epherical.croptopia.util.FoodConstructor.*;
+import static com.epherical.croptopia.util.FoodConstructor.JUICE_5;
+import static com.epherical.croptopia.util.FoodConstructor.createBuilder;
 
 public class Juice implements ItemLike {
     private static final List<Juice> INSTANCES = new ArrayList<>();

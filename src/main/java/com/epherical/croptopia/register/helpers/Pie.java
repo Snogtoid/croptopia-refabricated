@@ -11,7 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.epherical.croptopia.CroptopiaMod.createGroup;
-import static com.epherical.croptopia.util.FoodConstructor.*;
+import static com.epherical.croptopia.util.FoodConstructor.PIE_10;
+import static com.epherical.croptopia.util.FoodConstructor.createFood;
 
 public class Pie implements ItemLike {
     private static final List<Pie> INSTANCES = new ArrayList<>();

@@ -20,7 +20,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import static com.epherical.croptopia.CroptopiaMod.*;
+import static com.epherical.croptopia.CroptopiaMod.createCropSettings;
+import static com.epherical.croptopia.CroptopiaMod.createGroup;
+import static com.epherical.croptopia.CroptopiaMod.createIdentifier;
+import static com.epherical.croptopia.CroptopiaMod.cropItems;
+import static com.epherical.croptopia.CroptopiaMod.seeds;
 import static com.epherical.croptopia.util.FoodConstructor.createFood;
 
 /**

@@ -41,7 +41,11 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-import static com.epherical.croptopia.CroptopiaMod.*;
+import static com.epherical.croptopia.CroptopiaMod.createGroup;
+import static com.epherical.croptopia.CroptopiaMod.createIdentifier;
+import static com.epherical.croptopia.CroptopiaMod.createSaplingSettings;
+import static com.epherical.croptopia.CroptopiaMod.cropBlocks;
+import static com.epherical.croptopia.CroptopiaMod.leafBlocks;
 
 public class Tree implements ItemConvertibleWithPlural, BlockConvertible {
     private static final List<Tree> TREES = new ArrayList<>();

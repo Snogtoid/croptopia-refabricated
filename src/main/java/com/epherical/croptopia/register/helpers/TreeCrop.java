@@ -35,7 +35,11 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-import static com.epherical.croptopia.CroptopiaMod.*;
+import static com.epherical.croptopia.CroptopiaMod.createGroup;
+import static com.epherical.croptopia.CroptopiaMod.createIdentifier;
+import static com.epherical.croptopia.CroptopiaMod.createSaplingSettings;
+import static com.epherical.croptopia.CroptopiaMod.cropBlocks;
+import static com.epherical.croptopia.CroptopiaMod.leafBlocks;
 import static com.epherical.croptopia.util.FoodConstructor.createFood;
 
 public class TreeCrop implements ItemConvertibleWithPlural, BlockConvertible {

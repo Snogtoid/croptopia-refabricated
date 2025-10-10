@@ -11,7 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.epherical.croptopia.CroptopiaMod.createGroup;
-import static com.epherical.croptopia.util.FoodConstructor.*;
+import static com.epherical.croptopia.util.FoodConstructor.ICE_CREAM_7;
+import static com.epherical.croptopia.util.FoodConstructor.createFood;
 
 public class IceCream implements ItemLike {
     private static final List<IceCream> INSTANCES = new ArrayList<>();
