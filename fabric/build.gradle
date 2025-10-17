@@ -139,24 +139,24 @@ tasks.withType(JavaCompile) {
 //}
 
 shadowJar {
-    archiveFileName = rootProject.archives_base_name + "-${rootProject.minecraft_version}-SHADED.jar"
+    archiveFileName = rootProject.archives_base_name + "-${rootProject.minecraft_version}.jar"
     destinationDirectory = file("${buildDir}/devlibs")
     configurations = [project.configurations.shade]
     from files("../jars/${rootProject.epherolib_jar}")
     relocate 'dependents/platform', 'data/c'
 }
 
-task remappedShadowJar(type: RemapJarTask) {
-    dependsOn tasks.shadowJar
-    input = tasks.shadowJar.archiveFile
-    archiveFileName = rootProject.archives_base_name + "-${rootProject.version}.jar"
-}
+//task remappedShadowJar(type: RemapJarTask) {
+//    dependsOn tasks.shadowJar
+//    input = tasks.shadowJar.archiveFile
+//    archiveFileName = rootProject.archives_base_name + "-${rootProject.version}.jar"
+//}
 
-tasks.assemble.dependsOn tasks.remappedShadowJar
+//tasks.assemble.dependsOn tasks.remappedShadowJar
 
-artifacts {
-    archives remappedShadowJar
-}
+//artifacts {
+//    archives remappedShadowJar
+//}
 
 // https://github.com/modrinth/minotaur
 modrinth {
