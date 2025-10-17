@@ -7,7 +7,7 @@
 # commit and push a version bump.
 #
 set -eu
-
+set -x
 
 #
 # Always run this in the root of the repo
