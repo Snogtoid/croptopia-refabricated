@@ -60,7 +60,7 @@ if [ $CURRENT_VERSION = $RELEASE_VERSION ]; then
     exit 1
 fi
 echo "Release version will be '$RELEASE_VERSION'"
-sed "s/^mod_version =.*/mod_version = $RELEASE_VERSION/" gradle.properties > gradle.properties.temp
+sed "s/^mod_version.*=.*/mod_version = $RELEASE_VERSION/" gradle.properties > gradle.properties.temp
 rm gradle.properties
 mv gradle.properties.temp gradle.properties
 
