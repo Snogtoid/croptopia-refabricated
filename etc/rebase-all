@@ -4,3 +4,4 @@ git rebase --onto pcal/1.21.5 pcal/1.21.6~ pcal/1.21.6
 git rebase --onto pcal/1.21.6 pcal/1.21.7~ pcal/1.21.7
 git rebase --onto pcal/1.21.7 pcal/1.21.8~ pcal/1.21.8
 git rebase --onto pcal/1.21.8 pcal/1.21.9~ pcal/1.21.9
+git rebase --onto pcal/1.21.9 pcal/1.21.10~ pcal/1.21.10

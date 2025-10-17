@@ -3,6 +3,8 @@ import net.fabricmc.loom.task.RemapJarTask
 plugins {
     id 'fabric-loom' version '1.11-SNAPSHOT'
     id 'com.github.johnrengelman.shadow' version '8.1.1'
+    id "com.modrinth.minotaur" version "2.8.7"
+    id "com.matthewprenger.cursegradle" version "1.4.0"
 }
 
 repositories {
@@ -42,7 +44,7 @@ sourceSets {
 }
 
 dependencies {
-    minecraft "com.mojang:minecraft:${rootProject.mc_ver}"
+    minecraft "com.mojang:minecraft:${rootProject.minecraft_version}"
     mappings loom.officialMojangMappings()
     modImplementation "net.fabricmc:fabric-loader:${rootProject.loader_version}"
     modImplementation "net.fabricmc.fabric-api:fabric-api:${rootProject.fabric_version}"
@@ -55,6 +57,7 @@ dependencies {
     }
 
     shade(rootProject)
+    shade files("../jars/${rootProject.epherolib_jar}")
     compileOnly(rootProject)
     implementation(rootProject)
 }
@@ -91,13 +94,13 @@ processResources {
 
     from(sourceSets.main.resources.srcDirs) {
         include "fabric.mod.json"
-        // This little horror allows us to have our published modid be 'croptopia-fabric' while still using datagen to 
+        // This little horror allows us to have our published modid be 'croptopia-refabricated' while still using datagen to
         // generate resources in the 'croptopia' namespace.  Fabric really doesn't want us to do that, which I guess
         // is sort of understandable, but in our case, given the temporary nature of this codebase, it seems like
         // a reasonable thing to want to do.  This is a little fragile, and it only works because we do runData as a
         // development operation, not as part of the release build.
         def isDatagenBuild = gradle.startParameter.taskNames.contains(":fabric:runData") || gradle.startParameter.taskNames.contains("runData")
-        def modId = isDatagenBuild ? "croptopia" : "croptopia-fabric"
+        def modId = isDatagenBuild ? "croptopia" : "croptopia-refabricated"
         expand "mod_version": rootProject.version, "mod_id": modId
         duplicatesStrategy = DuplicatesStrategy.INCLUDE
     }
@@ -130,46 +133,66 @@ tasks.withType(JavaCompile) {
     }
 }
 
+// Rename the regular jar to have a distinguishing suffix
+//jar {
+//    archiveFileName = rootProject.archives_base_name + "-${rootProject.version}-UNSHADED.jar"
+//}
+
 shadowJar {
-    archiveFileName = rootProject.archives_base_name + "-${rootProject.mc_ver}-FABRIC-dev.jar"
+    archiveFileName = rootProject.archives_base_name + "-${rootProject.minecraft_version}-SHADED.jar"
+    destinationDirectory = file("${buildDir}/devlibs")
     configurations = [project.configurations.shade]
+    from files("../jars/${rootProject.epherolib_jar}")
     relocate 'dependents/platform', 'data/c'
 }
 
 task remappedShadowJar(type: RemapJarTask) {
     dependsOn tasks.shadowJar
     input = tasks.shadowJar.archiveFile
-    archiveFileName = rootProject.archives_base_name + "-${rootProject.mc_ver}-FABRIC-${rootProject.version}.jar"
+    archiveFileName = rootProject.archives_base_name + "-${rootProject.version}.jar"
 }
 
 tasks.assemble.dependsOn tasks.remappedShadowJar
 
 artifacts {
     archives remappedShadowJar
-    shadow shadowJar
 }
 
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            artifactId = "${archives_base_name}-" + artifactId
-            //version = version + "-${mc_ver}"
-            // add all the jars that should be included when publishing to maven
-            //artifact remappedShadowJar
-            artifact(remapJar) {
-                builtBy remapJar
-            }
+// https://github.com/modrinth/minotaur
+modrinth {
+    token = System.getenv("MODRINTH_TOKEN") ?: 'MODRINTH_TOKEN_NOT_SET'
+    projectId = "${rootProject.modrinth_project_id}"
+    versionNumber = "${rootProject.version}"
+    versionType = "release"
+    uploadFile = remapJar
+    changelog = "<p><a href='https://github.com/pcal43/croptopia-refabricated/releases/tag/${rootProject.mod_version}'>https://github.com/pcal43/croptopia-refabricated/releases/tag/${rootProject.mod_version}</a></p>"
+    gameVersions = ["${rootProject.minecraft_version}"]
+    loaders = ["fabric"]
+    dependencies {
+        required.project "fabric-api"
+    }
+}
+
+
+// https://github.com/matthewprenger/CurseGradle
+curseforge {
+    apiKey = System.getenv("CURSEFORGE_TOKEN") ?: 'CURSEFORGE_TOKEN_NOT_SET'
+
+    project {
+        id = "${rootProject.curseforge_project_id}"
+        releaseType = "release"
+        changelog = "https://github.com/pcal43/croptopia-refabricated/releases/tag/${rootProject.mod_version}"
+        changelogType = "markdown"
+        mod_version = "${rootProject.version}"
+        addGameVersion ((String) rootProject.minecraft_version)
+        addGameVersion "Fabric"
+        mainArtifact(remapJar)
+        afterEvaluate {
+            uploadTask.dependsOn("remapJar")
         }
     }
 
-    repositories {
-        maven {
-            name = "EphericalMaven"
-            url = "https://maven.epherical.com/releases"
-            credentials {
-                username = m_user
-                password = m_pass
-            }
-        }
+    options {
+        forgeGradleIntegration = false
     }
 }
