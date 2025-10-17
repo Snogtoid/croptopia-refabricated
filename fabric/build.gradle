@@ -139,11 +139,19 @@ tasks.withType(JavaCompile) {
 //}
 
 shadowJar {
-    archiveFileName = rootProject.archives_base_name + "-${rootProject.minecraft_version}.jar"
+    archiveFileName = rootProject.archives_base_name + "-${rootProject.minecraft_version}-SHADED.jar"
     destinationDirectory = file("${buildDir}/devlibs")
     configurations = [project.configurations.shade]
+    relocate 'dependents/platform', 'data/c' // REVIEW not entirely clear on what's going on here
+    // embed the epherolib classes and ensure they don't conflict with other versions that might be installed
     from files("../jars/${rootProject.epherolib_jar}")
-    relocate 'dependents/platform', 'data/c'
+    relocate 'com/epherical/epherolib', 'refabricated/com/epherical/epherolib'
+}
+
+// Configure remapJar to use the shadowJar output
+remapJar {
+    dependsOn shadowJar
+    inputFile = shadowJar.archiveFile
 }
 
 //task remappedShadowJar(type: RemapJarTask) {
